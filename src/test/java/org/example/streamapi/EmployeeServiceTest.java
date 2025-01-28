@@ -32,5 +32,4 @@ class EmployeeServiceTest {
         assertEquals("Jane Smith", maxSalaryEmployee.getFullName());
     }
 
-
 }
