@@ -1,35 +1,80 @@
 package org.example.streamapi;
 
-import org.example.streamapi.service.DepartmentService;
 import org.example.streamapi.service.EmployeeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class EmployeeServiceTest {
+    private EmployeeService employeeService;
+
+    @BeforeEach
+    void setUp() {
+        employeeService = new EmployeeService();
+    }
 
     @Test
-    void testGetEmployeeMaxSalary() {
-        EmployeeService employeeServiceMock = Mockito.mock(EmployeeService.class);
-        DepartmentService departmentService = new DepartmentService(employeeServiceMock);
+    void testAddEmployee() {
+        Employee employee = new Employee("John Doe", 50000, "IT");
+        employeeService.addEmployee(employee);
 
-        List<Employee> employees = List.of(
-                new Employee("John Doe", 1000, "1"),
-                new Employee("Jane Smith", 2000, "1"),
-                new Employee("Emily Davis", 1500, "2")
-        );
+        assertEquals(1, employeeService.getAllEmployees().size());
+        assertTrue(employeeService.getAllEmployees().contains(employee));
+    }
 
-        Mockito.when(employeeServiceMock.getAllEmployees()).thenReturn(employees);
+    @Test
+    void testAddDuplicateEmployee() {
+        Employee employee = new Employee("John Doe", 50000, "IT");
+        employeeService.addEmployee(employee);
 
-        Employee maxSalaryEmployee = departmentService.getEmployeeMaxSalary("1");
-        assertNotNull(maxSalaryEmployee);
-        assertEquals("Jane Smith", maxSalaryEmployee.getFullName());
+        employeeService.addEmployee(employee); // Attempt to add duplicate
+        assertEquals(1, employeeService.getAllEmployees().size());
+    }
+
+    @Test
+    void testRemoveEmployee() {
+        Employee employee = new Employee("John Doe", 50000, "IT");
+        employeeService.addEmployee(employee);
+        employeeService.removeEmployee(employee);
+        assertTrue(employeeService.getAllEmployees().isEmpty());
+    }
+
+    @Test
+    void testRemoveNonExistentEmployee() {
+        Employee employee = new Employee("John Doe", 50000, "IT");
+
+        employeeService.removeEmployee(employee); // Attempt to remove non-existent employee
+        assertTrue(employeeService.getAllEmployees().isEmpty());
+    }
+
+    @Test
+    void testFindEmployee() {
+        Employee employee = new Employee("John Smit", 50000, "IT");
+        employeeService.addEmployee(employee);
+        Employee foundEmployee = employeeService.findEmployees("John Smit");
+        assertNotNull(foundEmployee);
+        assertEquals(employee, foundEmployee);
+    }
+
+    @Test
+    void testFindNonExistentEmployee() {
+        Employee foundEmployee = employeeService.findEmployees("Non Existent");
+        assertNull(foundEmployee);
+    }
+
+    @Test
+    void testGetAllEmployees() {
+        Employee employee1 = new Employee("John Trapm", 50000, "IT");
+        Employee employee2 = new Employee("Jane Smith", 60000, "HR");
+        employeeService.addEmployee(employee1);
+        employeeService.addEmployee(employee2);
+        List<Employee> allEmployees = employeeService.getAllEmployees();
+        assertEquals(2, allEmployees.size());
+        assertTrue(allEmployees.contains(employee1));
+        assertTrue(allEmployees.contains(employee2));
     }
 
 }
