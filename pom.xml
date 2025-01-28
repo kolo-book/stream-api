@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.example</groupId>
-    <artifactId>stream-api</artifactId>
+    <artifactId>mockito</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>stream-api</name>
-    <description>stream-api</description>
+    <name>mockito</name>
+    <description>mockito</description>
     <url/>
     <licenses>
         <license/>
@@ -40,6 +40,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
